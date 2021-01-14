@@ -6,4 +6,5 @@ import com.nylgsc.video.entity.Music;
 import com.nylgsc.video.entity.Tag;
 
 public interface TagService extends IService<Tag> {
+    void delTagById(Long id);
 }
