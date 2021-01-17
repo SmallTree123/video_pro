@@ -41,11 +41,13 @@ public class VideoServiceImpl extends ServiceImpl<VideosMapper, Videos> implemen
         String originalFilename = file.getOriginalFilename().replace(".","");
         String f = originalFilename.substring(0,originalFilename.length()-3)+".mp4";
 
+
+
         Videos videos = new Videos();
         videos.setVideoUserProfile(userProfile);
         videos.setUserId(userId);
         videos.setVideoDesc(videoDecr);
-        videos.setTagId(selectedTags);
+        videos.setTagName(selectedTags);
         videos.setCreateTime(System.currentTimeMillis());
         videos.setStatus(1);
 

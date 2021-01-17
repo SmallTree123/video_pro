@@ -33,7 +33,13 @@ public class TagController {
     @DeleteMapping(value = "/delTag")
     public R queryAllTag(Long id){
         tagService.update(new UpdateWrapper<Tag>().set("del_flag",1).eq("id",id));
-//        tagService.delTagById(id);
+        return R.ok();
+    }
+
+    @PutMapping(value = "/updateTag")
+    public R updateTag(@RequestBody Tag tag){
+        tag.setDelFlag("0");
+        tagService.saveOrUpdate(tag);
         return R.ok();
     }
 }

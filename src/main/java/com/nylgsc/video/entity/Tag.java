@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class Tag {
-    private Integer id;
+    private Long id;
 
     private String name;
 

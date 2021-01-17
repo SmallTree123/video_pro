@@ -25,7 +25,7 @@ public class Videos implements Serializable {
 
     private String videoPath;
 
-    private Float videoSeconds;
+    private Integer videoSeconds;
 
     private String videoUserProfile;
 
@@ -41,7 +41,6 @@ public class Videos implements Serializable {
 
     private String delFlag;
 
-    @TableField(exist = false)
     private String tagName;
 
 }

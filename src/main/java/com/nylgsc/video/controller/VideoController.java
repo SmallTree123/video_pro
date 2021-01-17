@@ -14,11 +14,13 @@ import com.nylgsc.video.service.VideoService;
 import com.nylgsc.video.utils.R;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,22 +59,31 @@ public class VideoController {
      */
     @PostMapping(value = "/query")
     public R queryVideo(@RequestBody Videos videos){
-        Map<Integer, String> tags = tagService.list().stream().collect(Collectors.toMap(Tag::getId, Tag::getName));
         List<Videos> returnVideos = videoService.queryVideo(videos);
-        for (Videos returnVideo : returnVideos) {
-            String[] split = returnVideo.getTagId().split(",");
-            StringBuilder videoTag = new StringBuilder();
-            for (String s : split) {
-                videoTag.append("@"+tags.get(Integer.parseInt(s)));
-            }
-            returnVideo.setTagName(videoTag.toString());
-        }
         List<UserFavor> list = userFavorService.list();
         Map map = new HashMap<>();
         map.put("videos",returnVideos);
         map.put("userFavors",list);
         return R.ok(map);
     }
+
+    /**
+     * 查询所有视频
+     *
+     * @return
+     */
+    @PostMapping(value = "/queryForBase")
+    public R queryVideoForBase(@RequestBody Videos videos){
+        QueryWrapper<Videos> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(videos.getTagName())){
+            queryWrapper.like("tag_name",videos.getTagName());
+        }
+        if (StringUtils.isNotEmpty(videos.getVideoDesc())){
+            queryWrapper.like("video_desc",videos.getVideoDesc());
+        }
+        return R.ok(videoService.list(queryWrapper));
+    }
+
 
     /**
      * 返回用户关注的视频信息
@@ -86,6 +97,12 @@ public class VideoController {
     @GetMapping(value = "/queryVideoByUserId")
     public R queryVideoByUserId(@RequestParam(value = "userId",required = false)String userId){
         return R.ok(videoService.list(new QueryWrapper<Videos>().eq("user_id",userId).eq("del_flag","0")));
+    }
+
+    @PutMapping("/updateVideo")
+    public R updateVideo(@RequestBody Videos videos){
+        videoService.updateById(videos);
+        return R.ok();
     }
 
 }
